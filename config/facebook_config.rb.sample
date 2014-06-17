@@ -1,0 +1,12 @@
+class FacebookConfig
+	@@token = "Long term token"
+	@@pageid = "Page ID"
+
+	def self.getToken
+		@@token
+	end
+
+	def self.getPageID
+		@@pageid
+	end
+end

@@ -1,0 +1,17 @@
+class ConnectDB
+	@@user = "user"
+	@@password = "password"
+	@@database = "DB name"
+
+	def self.getUser
+		@@user
+	end
+
+	def self.getPass
+		@@password
+	end
+
+	def self.getDatabase
+		@@database
+	end
+end
