@@ -32,14 +32,14 @@ post '/login' do
 		session[:login_check] = true
 		redirect to('/confirmMessage')
 	else
-		session[:login_check] = false
+		session[:login_check] = nil
 		redirect to('/login')
 	end
 	session[:login_check]
 end
 
 get '/confirmMessage' do
-	if session[:login_check] == false
+	if session[:login_check] == nil
 		redirect to('/login')
 	end
 	tmp = message_items.where(:checked => nil).first
@@ -47,7 +47,7 @@ get '/confirmMessage' do
 end
 
 post '/confirmMessage' do
-	if session[:login_check] == false
+	if session[:login_check] == nil
 		redirect to('/login')
 	end
 	if params[:confirm] == "true"
