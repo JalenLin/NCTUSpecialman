@@ -1,8 +1,8 @@
 require 'sinatra'
 require 'sequel'
 require 'rest_client'
-require './config/db_config.rb'
-require './config/facebook_config.rb'
+require './config/db_config'
+require './config/facebook_config'
 
 DB = Sequel.connect(:adapter=>'mysql', :host=>'localhost', :database=>ConnectDB.getDatabase, :user=>ConnectDB.getUser, :password=>ConnectDB.getPass)
 message_items = DB[:Message]
@@ -14,8 +14,11 @@ set :bind, '0.0.0.0'
 enable :sessions
 set :session_secret, 'adjfkioewjaoiriogfdkjgihjweaio'
 
+before '/confirmMessage*' do
+  session[:login_check].nil? and redirect to('/login')
+end
 
-get '/' do 
+get '/' do
 	erb :index
 end
 
@@ -39,17 +42,11 @@ post '/login' do
 end
 
 get '/confirmMessage' do
-	if session[:login_check] == nil
-		redirect to('/login')
-	end
-	tmp = message_items.where(:checked => nil).first
-	erb :confirm, :locals => { :message => tmp[:message], :id => tmp[:id] }
+	@messages = message_items.where(checked: nil).all
+	erb :confirm
 end
 
 post '/confirmMessage' do
-	if session[:login_check] == nil
-		redirect to('/login')
-	end
 	if params[:confirm] == "true"
 		message_items.where(:id => params[:id]).update(:checked=>1 )
 		RestClient.post( fb_page_url, { :access_token => FacebookConfig.getToken, :message => message_items.where(:id => params[:id]).first[:message] })

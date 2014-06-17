@@ -4,10 +4,14 @@
 <title>強者交大</title>
 </head>
 <body>
-<%= message.force_encoding('utf-8') %>
-<form action="confirmMessage" method="POST">
-	<input type="hidden" name="id" value="<%= id %>" />
-	<BUTTON type="submit" name="confirm" value="true">發表</BUTTON> &nbsp; <BUTTON type="submit" name="confirm" value="false">刪除</BUTTON>
-</form>
+
+<% @messages.each do |message| %>
+  <form action="confirmMessage" method="POST">
+    <%= message[:message] %>
+    <input type="hidden" name="id" value="<%= message[:id] %>" />
+    <button type="submit" name="confirm" value="true">發表</button> &nbsp; <button type="submit" name="confirm" value="false">刪除</button>
+  </form>
+  <hr />
+<% end %>
 </body>
 </html>
